@@ -4,7 +4,14 @@ import '/src/App.css'
 
 function Home() {
 
-  const algos = ['FCFS', 'RR', 'SJF', 'SRTF', 'PNP', 'MLQ', 'PBS', 'MLFQ']
+  const algos = ['First Come First Serve', 
+                'Round-Robin Scheduling', 
+                'Shortest Job First', 
+                'Shortest Remaining Time First', 
+                'Priority Non-Preemptive', 
+                'Multilevel Queue', 
+                'Priority-Based Scheduling', 
+                'Multilevel Feedback Queue']
   const navigate = useNavigate()
 
   const handleNavigate = () =>{
@@ -15,7 +22,7 @@ function Home() {
     return(
       <>
       <div className='col-md-6'>
-       <button type="button" onClick={handleNavigate} class="w-100  btn btn-danger btn-block">{datum}</button>
+       <button type="button" onClick={handleNavigate} class="w-100 m-1 btn btn-danger btn-block">{datum}</button>
       </div>
       </>
     )
