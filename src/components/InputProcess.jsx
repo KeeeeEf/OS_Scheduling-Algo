@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import '/src/App.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export const InputProcess = () => {
-    const [processes, setProcesses] = useState([]);
-    const [arrivalTime, setArrivalTime] = useState('');
-    const [cpuBurst, setCpuBurst] = useState('');
-    const [editId, setEditId] = useState(null);
+    const navigate = useNavigate()
+    const [processes, setProcesses] = useState([])
+    const [arrivalTime, setArrivalTime] = useState('')
+    const [cpuBurst, setCpuBurst] = useState('')
+    const [editId, setEditId] = useState(null)
   
     const handleAddProcess = () => {
         if (arrivalTime === '' || arrivalTime < 0) {
@@ -70,10 +71,29 @@ export const InputProcess = () => {
       });
     };
 
-    const navigate = useNavigate()
+    // Load stored processes data when the component mounts
+    useEffect(() => {
+      const storedProcesses = JSON.parse(sessionStorage.getItem('inputProcesses'));
+      if (storedProcesses) {
+        setProcesses(storedProcesses);
+      }
+    }, []);
+
+    // Function to store processes data in session storage
+    const storeProcessesData = (data) => {
+      sessionStorage.setItem('inputProcesses', JSON.stringify(data));
+    };
 
     const handleSimulate = () =>{
-      navigate('/scheduling')
+      storeProcessesData(processes)
+      navigate(
+        '/scheduling',
+        {
+          state: {
+            processes
+          }
+        }
+      )
     }
   
     return (
