@@ -2,6 +2,9 @@ import { useState } from "react"
 
 export const InputProcess = () =>{
     return(
-        <h1>Hello</h1>
+        <div>
+            <h1>Input Processes</h1>
+            
+        </div>
     )
 }
