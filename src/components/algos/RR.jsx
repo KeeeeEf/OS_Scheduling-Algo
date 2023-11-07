@@ -30,37 +30,46 @@ function solve(processList, qlist, total){
     pid.wt = pid.tt - pid.bt
 }
 
-function fcfs(processList){
+
+function rr(processList, tq){
     let total = 0;
     let tlist = [];
     let qlist = [];
-    let nlist = [...processList]
-    
-    nlist.sort(function(a,b){return a.at-b.at});
+    let nlist  = [...processList];
 
-    while(nlist.length != 0 || qlist.length != 0){
-        while(nlist.length != 0 && nlist[0].at <= total){
-            qlist.push(nlist.shift());
+    nlist.sort(function(a,b){return a.at - b.at});
+
+    while(nlist.length != 0 || qlist.length!=0){
+        function findQ(list){
+            while(list.length != 0 && list[0].at <= total){
+                qlist.push(nlist.shift());
+            }
         }
+        
+        findQ(nlist);
 
         if(qlist.length == 0 && nlist.length > 0){
-            total += nlist[0].at
+            total += nlist[0].at;
             tlist.push(new Timeline(total));
         }
 
         else{
             while(qlist.length != 0){
-                if(nlist.length > 0 && total >=nlist[0].at){
-                    break;
-                }
-                
-                total += qlist[0].bt;
-                const temp = {...qlist[0]};
-                tlist.push(new Timeline(total, temp.processID))
-                solve(processList,qlist[0], total);
+                total += (qlist[0].bt >= tq)?tq:qlist[0].bt;
+                let temp = {...qlist[0]};
+                temp.bt = Math.max(temp.bt-tq, 0);
                 qlist.shift();
+                tlist.push(new Timeline(total, temp.processID));
+                findQ(nlist);
+
+                if(temp.bt > 0){
+                    qlist.push(temp);
+                }else{
+                    solve(processList, temp, total)
+                }
             }
         }
+
     }
     return tlist;
 }
@@ -81,9 +90,10 @@ export const Declare = () =>{
     processList.push(D)
     processList.push(E)
 
-    const timeline = fcfs(processList)
+    const timeline = rr(processList, 3)
 
-    timeline.map((data)=>{
-        console.log(data.value, data.time);
+    processList.map((data)=>{
+        // console.log(data.value, data.time);
+        show(data)
     })
 }

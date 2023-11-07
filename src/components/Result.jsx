@@ -1,4 +1,4 @@
-import { Declare } from "./algos/fcfs"
+import { Declare } from "./algos/SJF"
 import { useEffect } from "react"
 
 export const Result = () =>{

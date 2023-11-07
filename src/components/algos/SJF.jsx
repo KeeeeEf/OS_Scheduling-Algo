@@ -30,30 +30,33 @@ function solve(processList, qlist, total){
     pid.wt = pid.tt - pid.bt
 }
 
-function fcfs(processList){
+function sjf(processList){
     let total = 0;
     let tlist = [];
     let qlist = [];
-    let nlist = [...processList]
-    
-    nlist.sort(function(a,b){return a.at-b.at});
+    let nlist = [...processList];
+
+    nlist.sort(function(a,b){return a.at - b.at})
 
     while(nlist.length != 0 || qlist.length != 0){
-        while(nlist.length != 0 && nlist[0].at <= total){
-            qlist.push(nlist.shift());
+        function findQ(list){
+            while(list.length != 0 && list[0].at <= total){
+                qlist.push(list.shift());
+            }
         }
+
+        findQ(nlist);
 
         if(qlist.length == 0 && nlist.length > 0){
-            total += nlist[0].at
+            total += nlist[0].at;
             tlist.push(new Timeline(total));
-        }
-
-        else{
-            while(qlist.length != 0){
-                if(nlist.length > 0 && total >=nlist[0].at){
-                    break;
+        }else{
+            qlist.sort(function(a,b){return a.bt-b.bt});
+            while(qlist!=0){
+                if(nlist.length>0 && total>=nlist[0].at){
+                    break
                 }
-                
+
                 total += qlist[0].bt;
                 const temp = {...qlist[0]};
                 tlist.push(new Timeline(total, temp.processID))
@@ -62,7 +65,7 @@ function fcfs(processList){
             }
         }
     }
-    return tlist;
+    return tlist
 }
 
 export const Declare = () =>{
@@ -81,9 +84,10 @@ export const Declare = () =>{
     processList.push(D)
     processList.push(E)
 
-    const timeline = fcfs(processList)
+    const timeline = sjf(processList)
 
-    timeline.map((data)=>{
-        console.log(data.value, data.time);
+    processList.map((data)=>{
+        // console.log(data.value, data.time);
+        show(data)
     })
 }
