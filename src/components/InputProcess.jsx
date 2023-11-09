@@ -9,81 +9,79 @@ export const InputProcess = () => {
     const [cpuBurst, setCpuBurst] = useState('')
     const [editId, setEditId] = useState(null)
   
+    //add or edit process
     const handleAddProcess = () => {
         if (arrivalTime === '' || arrivalTime < 0) {
-            alert('Please enter valid arrival time');
-            return;
+            alert('Please enter valid arrival time')
+            return
         }
 
         if (cpuBurst === '' || cpuBurst < 1) {
-            alert('Please enter valid CPU burst time.');
-            return;
+            alert('Please enter valid CPU burst time.')
+            return
         }
         
-          if (editId !== null) {
-            // If editId is not null, update the existing process
-            const updatedProcesses = processes.map((process) => {
-              if (process.id === editId) {
-                return {
-                  id: process.id,
-                  arrivalTime: parseInt(arrivalTime),
-                  cpuBurst: parseInt(cpuBurst),
-                };
+        if (editId !== null) {
+          const updatedProcesses = processes.map((process) => {
+            if (process.id === editId) {
+              return {
+                id: process.id,
+                arrivalTime: parseInt(arrivalTime),
+                cpuBurst: parseInt(cpuBurst),
               }
-              return process;
-            });
-        
-            setProcesses(updatedProcesses);
-            setEditId(null);
-          } else {
-            // If editId is null, add a new process
-            const newProcess = {
-              id: processes.length === 0 ? 1 : processes[processes.length - 1].id + 1,
-              arrivalTime: parseInt(arrivalTime),
-              cpuBurst: parseInt(cpuBurst),
-            };
-        
-            setProcesses([...processes, newProcess]);
+            }
+            return process
+          })
+          setProcesses(updatedProcesses)
+          setEditId(null)
+        } else {
+          const newProcess = {
+            id: processes.length === 0 ? 1 : processes[processes.length - 1].id + 1,
+            arrivalTime: parseInt(arrivalTime),
+            cpuBurst: parseInt(cpuBurst),
           }
-        
-          setArrivalTime('');
-          setCpuBurst('');
-    };
-  
+      
+          setProcesses([...processes, newProcess])
+        }
+      
+        setArrivalTime('')
+        setCpuBurst('')
+    }
+    
+    //edit process
     const handleEditProcess = (id) => {
-      const processToEdit = processes.find((process) => process.id === id);
+      const processToEdit = processes.find((process) => process.id === id)
       if (processToEdit) {
-        setArrivalTime(processToEdit.arrivalTime.toString());
-        setCpuBurst(processToEdit.cpuBurst.toString());
-        setEditId(id);
+        setArrivalTime(processToEdit.arrivalTime.toString())
+        setCpuBurst(processToEdit.cpuBurst.toString())
+        setEditId(id)
       }
-    };
+    }
   
+    //delete process
     const handleDeleteProcess = (id) => {
-      setProcesses((prevProcesses) => prevProcesses.filter((process) => process.id !== id));
-      setEditId(null);
+      setProcesses((prevProcesses) => prevProcesses.filter((process) => process.id !== id))
+      setEditId(null)
       
       setProcesses((prevProcesses) => {
         return prevProcesses.map((process, index) => ({
           ...process,
           id: index + 1,
-        }));
-      });
-    };
+        }))
+      })
+    }
 
-    // Load stored processes data when the component mounts
     useEffect(() => {
-      const storedProcesses = JSON.parse(sessionStorage.getItem('inputProcesses'));
+      const storedProcesses = JSON.parse(sessionStorage.getItem('inputProcesses'))
       if (storedProcesses) {
-        setProcesses(storedProcesses);
+        setProcesses(storedProcesses)
       }
-    }, []);
-
-    // Function to store processes data in session storage
+    }, [])
+           
     const storeProcessesData = (data) => {
-      sessionStorage.setItem('inputProcesses', JSON.stringify(data));
-    };
-
+      sessionStorage.setItem('inputProcesses', JSON.stringify(data))
+    }
+    
     const handleSimulate = () =>{
       storeProcessesData(processes)
       navigate(
@@ -148,6 +146,7 @@ export const InputProcess = () => {
             ))}
           </tbody>
         </table>
+        
         <div className="form-group">
           <label>Arrival Time:</label>
           <input
@@ -157,6 +156,7 @@ export const InputProcess = () => {
             className="form-control"
           />
         </div>
+
         <div className="form-group">
           <label>CPU Burst:</label>
           <input
@@ -176,5 +176,5 @@ export const InputProcess = () => {
         </button>
 
       </div>
-    );
-};
+    )
+}
