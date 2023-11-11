@@ -13,31 +13,6 @@ export const Scheduling = () => {
     setSchedulingData(calculatedData);
   }, [processes]);
 
-  // Calculate significant points of time (start times, end times, and idle times)
-  const ganttChart = [];
-  let currentTime = 0;
-
-  schedulingData.forEach((data, index) => {
-    // Add idle time before the current process
-    if (data.startTime > currentTime) {
-      ganttChart.push({
-        processId: 'Idle',
-        color: 'white', // Color for idle time
-        duration: data.startTime - currentTime,
-      });
-      currentTime = data.startTime;
-    }
-
-    // Add the current process
-    ganttChart.push({
-      processId: `P${data.process.id}`,
-      color: `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`,
-      duration: data.endTime - currentTime,
-    });
-
-    currentTime = data.endTime;
-  });
-
   return (
     <div>
       <h1>Scheduling</h1>
@@ -67,19 +42,6 @@ export const Scheduling = () => {
       </table>
       <div>
         <h2>Gantt Chart</h2>
-        <div className="gantt-chart">
-          {ganttChart.map((data, index) => (
-            <div
-              key={index}
-              style={{
-                width: `${data.duration * 20}px`, // Adjust width for better visualization
-                backgroundColor: data.color,
-              }}
-            >
-              {data.processId}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
