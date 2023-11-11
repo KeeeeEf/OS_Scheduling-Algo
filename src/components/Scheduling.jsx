@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { calculateScheduling} from './algos/SJF';
+import { calculateScheduling} from './algos/RR';
 import { GanttChart } from './GanttChart';
 
 export const Scheduling = () => {
@@ -10,7 +10,7 @@ export const Scheduling = () => {
   const [timelineData, setTimelineData] = useState([]);
 
   useEffect(() => {
-    const functionCall = calculateScheduling(processes)
+    const functionCall = calculateScheduling(processes,3)
     const calculatedData = functionCall.schedulingData;
     const timeline = functionCall.timelineList;
     calculatedData.sort((a, b) => a.process.id - b.process.id);
