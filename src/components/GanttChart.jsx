@@ -31,8 +31,8 @@ export const GanttChart = (props) => {
     
     process.forEach((data) => {
     const name = (data.value == 'idle')?'idle':'P'+data.value;
-      dataRow.push(['Time', name, getDate(startGantt), getDate(startGantt + data.time)]);
-      startGantt += data.time;
+      dataRow.push(['Time', name, getDate(startGantt), getDate(data.time)]);
+      startGantt = data.time;
     });
 
     dataTable.addRows([...dataRow]);
