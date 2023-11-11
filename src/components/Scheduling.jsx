@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { calculateScheduling } from '../algos/srtfScheduling';
+import { calculateScheduling} from './algos/SJF';
+import { GanttChart } from './GanttChart';
 
 export const Scheduling = () => {
   const location = useLocation();
   const { processes } = location.state;
   const [schedulingData, setSchedulingData] = useState([]);
+  const [timelineData, setTimelineData] = useState([]);
 
   useEffect(() => {
-    const calculatedData = calculateScheduling(processes);
+    const functionCall = calculateScheduling(processes)
+    const calculatedData = functionCall.schedulingData;
+    const timeline = functionCall.timelineList;
     calculatedData.sort((a, b) => a.process.id - b.process.id);
     setSchedulingData(calculatedData);
+    setTimelineData(timeline);
   }, [processes]);
+
 
   return (
     <div>
@@ -42,7 +48,8 @@ export const Scheduling = () => {
       </table>
       <div>
         <h2>Gantt Chart</h2>
-      </div>
+        <GanttChart data={timelineData}/>
+      </div>  
     </div>
   );
 };
