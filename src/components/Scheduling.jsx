@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { calculateScheduling} from './algos/srtf';
 import { GanttChart } from './GanttChart';
 
 export const Scheduling = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { processes } = location.state;
   const [schedulingData, setSchedulingData] = useState([]);
