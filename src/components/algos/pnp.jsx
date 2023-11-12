@@ -5,7 +5,6 @@ function calculateScheduling(processes) {
   let queueList = [];
   let newList = [...processes];
 
-  // Sort processes by arrival time and priority
   newList.sort(function(a, b) {
     if (a.arrivalTime !== b.arrivalTime) {
       return a.arrivalTime - b.arrivalTime;
@@ -26,12 +25,10 @@ function calculateScheduling(processes) {
     if (queueList.length === 0 && newList.length > 0) {
       total = newList[0].arrivalTime;
     } else {
-      // Sort the queue by priority
       queueList.sort(function(a, b) {
         return a.priority - b.priority;
       });
 
-      // Execute the process with the highest priority
       const currentProcess = queueList.shift();
       total += currentProcess.cpuBurst;
 
