@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { calculateScheduling} from './algos/pnp';
+import { calculateScheduling} from './algos/pbs';
 import { GanttChart } from './GanttChart';
 
 export const Scheduling = () => {
@@ -14,6 +14,10 @@ export const Scheduling = () => {
   const [cpuUtilization, setCpuUtilization] = useState(0);
   const [totalCpuBurst, setToTalCpuBurst] = useState(0);
   const [finalEndTime, setFinalEndTime] = useState(0);
+
+  const [totalTAT, setTotalTAT] = useState(0);
+  const [totalAWT, setTotalAWT] = useState(0);
+  const [totalProcesses, setTotalProcesses] = useState(0);
 
   useEffect(() => {
     const functionCall = calculateScheduling(processes);
@@ -33,6 +37,10 @@ export const Scheduling = () => {
     
     setSchedulingData(sortedData);
     setTimelineData(timeline);
+
+    setTotalTAT(totalTurnaroundTime);
+    setTotalAWT(totalWaitingTime);
+    setTotalProcesses(sortedData.length);
 
     setAverageTurnaroundTime(avgTurnaroundTime);
     setAverageWaitingTime(avgWaitingTime);
@@ -92,7 +100,11 @@ export const Scheduling = () => {
               TAT<sub>{data.process.id}</sub> = {data.endTime} - {data.process.arrivalTime} = {data.turnaroundTime}
             </p>
             ))}
-            <h5>The average turnaround time is {averageTurnaroundTime.toFixed(2)}</h5>
+            <h5>
+              The average turnaround time is
+              <br/>{'('}{schedulingData.map((data) => data.turnaroundTime).join(' + ')}{')'} / {totalProcesses} 
+              <br/>= {totalTAT} / {totalProcesses} = {averageTurnaroundTime.toFixed(2)}
+            </h5>
           </div>
 
           <div className="col">
@@ -101,7 +113,11 @@ export const Scheduling = () => {
               WT<sub>{data.process.id}</sub> = {data.turnaroundTime} - {data.process.cpuBurst} = {data.waitingTime}
             </p>
             ))}
-            <h5>The average waiting time is {averageWaitingTime.toFixed(2)}</h5>
+            <h5>
+              The average waiting time is
+              <br/>{'('}{schedulingData.map((data) => data.waitingTime).join(' + ')}{')'} / {totalProcesses} 
+              <br/>= {totalAWT} / {totalProcesses} = {averageWaitingTime.toFixed(2)}
+            </h5>
           </div>
         </div>
       </div>
