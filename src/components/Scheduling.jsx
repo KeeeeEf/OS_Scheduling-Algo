@@ -108,26 +108,26 @@ export const Scheduling = () => {
         <div className="row">
           <div className="col">{schedulingData.map((data, index) => (
             <p key={index}>
-              TAT<sub>{data.process.id}</sub> = {data.endTime} - {data.process.arrivalTime} = {data.turnaroundTime}
+              TAT<sub>{data.process.id}</sub> = {data.endTime} - {data.process.arrivalTime} = {data.turnaroundTime} ms
             </p>
             ))}
             <h5>
               The average turnaround time is
               <br/>{'('}{schedulingData.map((data) => data.turnaroundTime).join(' + ')}{')'} / {totalProcesses} 
-              <br/>= {totalTAT} / {totalProcesses} = {averageTurnaroundTime.toFixed(2)}
+              <br/>= {totalTAT} / {totalProcesses} = {averageTurnaroundTime.toFixed(2)}{' '}ms
             </h5>
           </div>
 
           <div className="col">
             {schedulingData.map((data, index) => (
             <p key={index}>
-              WT<sub>{data.process.id}</sub> = {data.turnaroundTime} - {data.process.cpuBurst} = {data.waitingTime}
+              WT<sub>{data.process.id}</sub> = {data.turnaroundTime} - {data.process.cpuBurst} = {data.waitingTime} ms
             </p>
             ))}
             <h5>
               The average waiting time is
               <br/>{'('}{schedulingData.map((data) => data.waitingTime).join(' + ')}{')'} / {totalProcesses} 
-              <br/>= {totalAWT} / {totalProcesses} = {averageWaitingTime.toFixed(2)}
+              <br/>= {totalAWT} / {totalProcesses} = {averageWaitingTime.toFixed(2)}{' '}ms
             </h5>
           </div>
         </div>
