@@ -24,6 +24,10 @@ function calculateScheduling(processes) {
 
     if (queueList.length === 0 && newList.length > 0) {
       total = newList[0].arrivalTime;
+      timelineList.push({
+        time: total,
+        value: 'idle'
+      });
     } else {
       queueList.sort(function(a, b) {
         return a.priority - b.priority;
