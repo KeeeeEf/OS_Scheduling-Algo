@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { calculateScheduling} from './algos/pnp';
+import { calculateScheduling} from './algos/pbs';
 import { GanttChart } from './GanttChart';
 
 export const Scheduling = () => {
