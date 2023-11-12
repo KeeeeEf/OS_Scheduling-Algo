@@ -1,8 +1,8 @@
 import './App.css'
 import {Route, Routes} from "react-router-dom"
 import Home from './components/Home'
-import { InputProcess } from './components/InputProcess'
-import { Scheduling } from './components/Scheduling'
+import { InputProcess } from './components/PriorityInputProcess'
+import { Scheduling } from './components/PriorityScheduling'
 
 function App() {
 
