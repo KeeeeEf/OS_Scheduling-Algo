@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { calculateScheduling} from './algos/RR';
 import { GanttChart } from './GanttChart';
+import { Declare } from './algos/PP';
 
 export const Scheduling = () => {
   const location = useLocation();
@@ -10,6 +11,7 @@ export const Scheduling = () => {
   const [timelineData, setTimelineData] = useState([]);
 
   useEffect(() => {
+    Declare();
     const functionCall = calculateScheduling(processes,3)
     const calculatedData = functionCall.schedulingData;
     const timeline = functionCall.timelineList;
