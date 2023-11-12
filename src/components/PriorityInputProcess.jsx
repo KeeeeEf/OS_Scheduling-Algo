@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '/src/App.css';
 import { useNavigate } from 'react-router-dom';
 
 export const InputProcess = () => {
@@ -10,47 +9,53 @@ export const InputProcess = () => {
   const [priority, setPriority] = useState('');
   const [editId, setEditId] = useState(null);
 
-  const getNextProcessId = () => {
-    const lastProcess = processes[processes.length - 1];
-    if (!lastProcess) {
-      return 'A';
-    }
-    const lastId = lastProcess.id;
-    const nextCharCode = lastId.charCodeAt(0) + 1;
-    return String.fromCharCode(nextCharCode);
+  useEffect(() => {
+    const storedProcesses = JSON.parse(sessionStorage.getItem('inputProcesses')) || [];
+    setProcesses(storedProcesses);
+  }, []);
+
+  const storeProcessesData = (data) => {
+    sessionStorage.setItem('inputProcesses', JSON.stringify(data));
   };
 
-  // add or edit process
-  const handleAddProcess = () => {
+  const getNextProcessId = () => {
+    const lastProcess = processes[processes.length - 1];
+    return lastProcess ? String.fromCharCode(lastProcess.id.charCodeAt(0) + 1) : 'A';
+  };
+
+  const validateInput = () => {
+
     if (arrivalTime === '' || arrivalTime < 0) {
       alert('Please enter valid arrival time');
-      return;
+      return false;
     }
 
     if (cpuBurst === '' || cpuBurst < 1) {
       alert('Please enter valid CPU burst time.');
-      return;
+      return false;
     }
 
     if (priority === '' || priority < 1) {
       alert('Please enter valid priority.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleAddProcess = () => {
+    if (!validateInput()) {
       return;
     }
 
     const remaining = parseInt(cpuBurst);
 
     if (editId !== null) {
-      const updatedProcesses = processes.map((process) => {
-        if (process.id === editId) {
-          return {
-            id: process.id,
-            arrivalTime: parseInt(arrivalTime),
-            cpuBurst: parseInt(cpuBurst),
-            priority: parseInt(priority),
-          };
-        }
-        return process;
-      });
+      const updatedProcesses = processes.map((process) =>
+        process.id === editId
+          ? { ...process, arrivalTime: parseInt(arrivalTime), cpuBurst: parseInt(cpuBurst), priority: parseInt(priority) }
+          : process
+      );
       setProcesses(updatedProcesses);
       setEditId(null);
     } else {
@@ -69,7 +74,6 @@ export const InputProcess = () => {
     setPriority('');
   };
 
-  // edit process
   const handleEditProcess = (id) => {
     const processToEdit = processes.find((process) => process.id === id);
     if (processToEdit) {
@@ -80,43 +84,37 @@ export const InputProcess = () => {
     }
   };
 
-  // delete process
   const handleDeleteProcess = (id) => {
-    setProcesses((prevProcesses) => prevProcesses.filter((process) => process.id !== id))
-    setEditId(null)
+    setProcesses((prevProcesses) => prevProcesses.filter((process) => process.id !== id));
+    setEditId(null);
 
-    setProcesses((prevProcesses) => {
-      return prevProcesses.map((process, index) => ({
+    setProcesses((prevProcesses) =>
+      prevProcesses.map((process, index) => ({
         ...process,
         id: String.fromCharCode('A'.charCodeAt(0) + index),
       }))
-    })
-  }
-
-  useEffect(() => {
-    const storedProcesses = JSON.parse(sessionStorage.getItem('inputProcesses'))
-    if (storedProcesses) {
-      setProcesses(storedProcesses)
-    }
-  }, [])
-
-  const storeProcessesData = (data) => {
-    sessionStorage.setItem('inputProcesses', JSON.stringify(data))
-  }
+    );
+  };
 
   const handleSimulate = () => {
-    storeProcessesData(processes)
+  
+    if (processes.length < 2) {
+      alert('Please add at least two processes before simulating.');
+      return;
+    }
+
+    storeProcessesData(processes);
     navigate('/scheduling', {
       state: {
         processes,
       },
-    })
-  }
-
+    });
+  };
+  
   return (
     <div>
       <h1>Input Processes</h1>
-      <table className="table">
+      <table className="table mt-5">
         <thead>
           <tr>
             <th>Process ID</th>
@@ -175,13 +173,13 @@ export const InputProcess = () => {
                   <>
                     <button
                       onClick={() => handleEditProcess(process.id)}
-                      className="btn btn-warning"
+                      className="btn btn-warning mx-2"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteProcess(process.id)}
-                      className="btn btn-danger"
+                      className="btn btn-danger mx-2"
                     >
                       Delete
                     </button>
@@ -192,43 +190,53 @@ export const InputProcess = () => {
           ))}
         </tbody>
       </table>
+      
+      <div className="row mt-5">
+        <div className="col">
+          <div className="form-group">
+            <h5 className="bold">Arrival Time</h5>
+            <input
+              type="number"
+              value={arrivalTime}
+              onChange={(e) => setArrivalTime(e.target.value)}
+              className="form-control"
+            />
+          </div>
+        </div>
 
-      <div className="form-group">
-        <label>Arrival Time:</label>
-        <input
-          type="number"
-          value={arrivalTime}
-          onChange={(e) => setArrivalTime(e.target.value)}
-          className="form-control"
-        />
+        <div className="col">
+          <div className="form-group">
+            <h5 className="bold">CPU Burst</h5>
+            <input
+              type="number"
+              value={cpuBurst}
+              onChange={(e) => setCpuBurst(e.target.value)}
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <div className="col">
+          <div className="form-group">
+            <h5 className="bold">Priority</h5>
+            <input
+              type="number"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <div className="col mt-2">
+          <button onClick={handleAddProcess} className="btn btn-primary m-4">
+            {editId !== null ? 'Save' : 'Add Process'}
+          </button>
+        </div>
       </div>
 
-      <div className="form-group">
-        <label>CPU Burst:</label>
-        <input
-          type="number"
-          value={cpuBurst}
-          onChange={(e) => setCpuBurst(e.target.value)}
-          className="form-control"
-        />
-      </div>
-
-      <div className="form-group">
-        <label>Priority:</label>
-        <input
-          type="number"
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="form-control"
-        />
-      </div>
-
-      <button onClick={handleAddProcess} className="btn btn-primary">
-        {editId !== null ? 'Save' : 'Add Process'}
-      </button>
-
-      <button onClick={handleSimulate} className="btn btn-primary">
-        Simulate
+      <button onClick={handleSimulate} className="btn btn-lg btn-danger mx-2 mt-5">
+        Simulate Scheduling
       </button>
     </div>
   )

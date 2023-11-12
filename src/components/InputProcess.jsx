@@ -19,18 +19,26 @@ export const InputProcess = () => {
     return String.fromCharCode(nextCharCode)
   }
 
-  // add or edit process
-  const handleAddProcess = () => {
+  const validateInput = () => {
+    
     if (arrivalTime === '' || arrivalTime < 0) {
-      alert('Please enter valid arrival time')
-      return
+      alert('Please enter valid arrival time');
+      return false;
     }
 
     if (cpuBurst === '' || cpuBurst < 1) {
-      alert('Please enter valid CPU burst time.')
-      return
+      alert('Please enter valid CPU burst time.');
+      return false;
     }
 
+    return true;
+  };
+
+  // add or edit process
+  const handleAddProcess = () => {
+    if (!validateInput()) {
+      return;
+    }
     const remaining = parseInt(cpuBurst)
 
     if (editId !== null) {
@@ -95,6 +103,12 @@ export const InputProcess = () => {
   }
 
   const handleSimulate = () => {
+
+    if (processes.length < 2) {
+      alert('Please add at least two processes before simulating.');
+      return;
+    }
+
     storeProcessesData(processes)
     navigate('/scheduling', {
       state: {
@@ -106,7 +120,7 @@ export const InputProcess = () => {
   return (
     <div>
       <h1>Input Processes</h1>
-      <table className="table">
+      <table className="table mt-5">
         <thead>
           <tr>
             <th>Process ID</th>
@@ -152,13 +166,13 @@ export const InputProcess = () => {
                   <>
                     <button
                       onClick={() => handleEditProcess(process.id)}
-                      className="btn btn-warning"
+                      className="btn btn-warning mx-2"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteProcess(process.id)}
-                      className="btn btn-danger"
+                      className="btn btn-danger mx-2"
                     >
                       Delete
                     </button>
@@ -170,32 +184,40 @@ export const InputProcess = () => {
         </tbody>
       </table>
 
-      <div className="form-group">
-        <label>Arrival Time:</label>
-        <input
-          type="number"
-          value={arrivalTime}
-          onChange={(e) => setArrivalTime(e.target.value)}
-          className="form-control"
-        />
+      <div className="row mt-5">
+        <div className="col">
+          <div className="form-group">
+            <h5 className="bold">Arrival Time</h5>
+            <input
+              type="number"
+              value={arrivalTime}
+              onChange={(e) => setArrivalTime(e.target.value)}
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <div className="col">
+          <div className="form-group">
+            <h5 className="bold">CPU Burst</h5>
+            <input
+              type="number"
+              value={cpuBurst}
+              onChange={(e) => setCpuBurst(e.target.value)}
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <div className="col mt-2">
+          <button onClick={handleAddProcess} className="btn btn-primary m-4">
+            {editId !== null ? 'Save' : 'Add Process'}
+          </button>
+        </div>
       </div>
 
-      <div className="form-group">
-        <label>CPU Burst:</label>
-        <input
-          type="number"
-          value={cpuBurst}
-          onChange={(e) => setCpuBurst(e.target.value)}
-          className="form-control"
-        />
-      </div>
-
-      <button onClick={handleAddProcess} className="btn btn-primary">
-        {editId !== null ? 'Save' : 'Add Process'}
-      </button>
-
-      <button onClick={handleSimulate} className="btn btn-primary">
-        Simulate
+      <button onClick={handleSimulate} className="btn btn-lg btn-danger mx-2 mt-5">
+        Simulate Scheduling
       </button>
     </div>
   )
