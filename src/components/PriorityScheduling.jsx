@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { calculateScheduling} from './algos/pbs';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { calculateScheduling } from './algos/pbs';
 import { GanttChart } from './GanttChart';
 
 export const Scheduling = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { processes } = location.state;
   const [schedulingData, setSchedulingData] = useState([]);
@@ -12,7 +13,7 @@ export const Scheduling = () => {
   const [averageTurnaroundTime, setAverageTurnaroundTime] = useState(0);
   const [averageWaitingTime, setAverageWaitingTime] = useState(0);
   const [cpuUtilization, setCpuUtilization] = useState(0);
-  const [totalCpuBurst, setToTalCpuBurst] = useState(0);
+  const [totalCpuBurst, setTotalCpuBurst] = useState(0);
   const [finalEndTime, setFinalEndTime] = useState(0);
 
   const [totalTAT, setTotalTAT] = useState(0);
@@ -32,9 +33,9 @@ export const Scheduling = () => {
     const avgWaitingTime = totalWaitingTime / sortedData.length;
 
     const ttlCpuBurst = sortedData.reduce((acc, data) => acc + data.process.cpuBurst, 0);
-    const finEndTime = sortedData.reduce((maxEndTime, data) => {return Math.max(maxEndTime, data.endTime);}, 0);
-    const cpuUtil = ttlCpuBurst / finEndTime * 100;
-    
+    const finEndTime = sortedData.reduce((maxEndTime, data) => { return Math.max(maxEndTime, data.endTime); }, 0);
+    const cpuUtil = (ttlCpuBurst / finEndTime) * 100;
+
     setSchedulingData(sortedData);
     setTimelineData(timeline);
 
@@ -44,12 +45,21 @@ export const Scheduling = () => {
 
     setAverageTurnaroundTime(avgTurnaroundTime);
     setAverageWaitingTime(avgWaitingTime);
-    setToTalCpuBurst(ttlCpuBurst);
+    setTotalCpuBurst(ttlCpuBurst);
     setFinalEndTime(finEndTime);
     setCpuUtilization(cpuUtil);
-
   }, [processes]);
 
+  const handleBack = () => {
+    navigate('/input');
+    window.location.reload();
+  };
+
+  const handleSimulateAgain = () => {
+    navigate('/input', { state: { key: Date.now() } });
+    sessionStorage.clear();
+    window.location.reload();
+  };
 
   return (
     <div>
@@ -80,13 +90,15 @@ export const Scheduling = () => {
           ))}
         </tbody>
       </table>
+      <button onClick={handleBack} className="btn btn-primary">Back to Input Processes</button>
 
-      <div>
+      <div className="mt-4">
         <h2>Gantt Chart</h2>
         <GanttChart data={timelineData}/>
       </div>
 
       <div className="container">
+      <h2>Performance</h2>
         <div className="row">
           <div className="col">
             <h5>
@@ -121,6 +133,7 @@ export const Scheduling = () => {
           </div>
         </div>
       </div>
+      <button onClick={handleSimulateAgain} className="btn btn-danger btn-lg mt-5">Simulate Again</button>
     </div>
   );
 };

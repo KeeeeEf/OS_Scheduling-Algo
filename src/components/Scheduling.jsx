@@ -50,6 +50,17 @@ export const Scheduling = () => {
     
   }, [processes]);
 
+  const handleBack = () => {
+    navigate('/input');
+    window.location.reload();
+  };
+
+  const handleSimulateAgain = () => {
+    navigate('/input', { state: { key: Date.now() } });
+    sessionStorage.clear();
+    window.location.reload();
+  };
+
 
   return (
     <div>
@@ -78,12 +89,14 @@ export const Scheduling = () => {
           ))}
         </tbody>
       </table>
-      <div>
+      <button onClick={handleBack} className="btn btn-primary">Back to Input Processes</button>
+      <div className="mt-4">
         <h2>Gantt Chart</h2>
         <GanttChart data={timelineData}/>
       </div>  
-
+      
       <div className="container">
+        <h2>Performance</h2>
         <div className="row">
           <div className="col">
             <h5>
@@ -118,6 +131,7 @@ export const Scheduling = () => {
           </div>
         </div>
       </div>
+      <button onClick={handleSimulateAgain} className="btn btn-danger btn-lg mt-5">Simulate Again</button>
     </div>
   );
 };
