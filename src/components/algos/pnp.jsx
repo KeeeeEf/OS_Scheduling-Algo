@@ -1,36 +1,58 @@
 function calculateScheduling(processes) {
-  processes.sort((a, b) => a.priority - b.priority);
-
-  let currentTime = 0;
+  let total = 0;
   let schedulingData = [];
   let timelineList = [];
+  let queueList = [];
+  let newList = [...processes];
 
-  processes.forEach((process) => {
-    if (process.arrivalTime > currentTime) {
-      currentTime = process.arrivalTime;
+  // Sort processes by arrival time and priority
+  newList.sort(function(a, b) {
+    if (a.arrivalTime !== b.arrivalTime) {
+      return a.arrivalTime - b.arrivalTime;
+    } else {
+      return a.priority - b.priority;
+    }
+  });
+
+  while (newList.length !== 0 || queueList.length !== 0) {
+    function findQ(list) {
+      while (list.length !== 0 && list[0].arrivalTime <= total) {
+        queueList.push(list.shift());
+      }
     }
 
-    const startTime = currentTime;
-    const endTime = startTime + process.cpuBurst;
-    const turnaroundTime = endTime - process.arrivalTime;
-    const waitingTime = turnaroundTime - process.cpuBurst;
-    currentTime = endTime;
+    findQ(newList);
 
-    schedulingData.push({
-      process: process,
-      startTime,
-      endTime,
-      turnaroundTime,
-      waitingTime,
-    });
+    if (queueList.length === 0 && newList.length > 0) {
+      total = newList[0].arrivalTime;
+    } else {
+      // Sort the queue by priority
+      queueList.sort(function(a, b) {
+        return a.priority - b.priority;
+      });
 
-    timelineList.push({
-      time: endTime,
-      value: process.id,
-    });
-    
-  });
-  
+      // Execute the process with the highest priority
+      const currentProcess = queueList.shift();
+      total += currentProcess.cpuBurst;
+
+      timelineList.push({
+        time: total,
+        value: currentProcess.id,
+      });
+
+      const endTime = total;
+      const turnaroundTime = endTime - currentProcess.arrivalTime;
+      const waitingTime = turnaroundTime - currentProcess.cpuBurst;
+
+      schedulingData.push({
+        process: currentProcess,
+        endTime,
+        turnaroundTime,
+        waitingTime,
+      });
+    }
+  }
+
   return { schedulingData, timelineList };
 }
 
