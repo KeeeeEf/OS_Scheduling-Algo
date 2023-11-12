@@ -40,7 +40,6 @@ export const InputProcess = () => {
             id: process.id,
             arrivalTime: parseInt(arrivalTime),
             cpuBurst: parseInt(cpuBurst),
-            remainingTime: remaining,
           }
         }
         return process
@@ -52,7 +51,6 @@ export const InputProcess = () => {
         id: getNextProcessId(),
         arrivalTime: parseInt(arrivalTime),
         cpuBurst: parseInt(cpuBurst),
-        remainingTime: remaining,
       }
 
       setProcesses([...processes, newProcess])
