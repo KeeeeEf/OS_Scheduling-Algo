@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '/src/App.css';
 
 function Home() {
   const algos = [
@@ -21,7 +20,7 @@ function Home() {
     'Shortest Remaining Time First': 'SRTF',
     'Priority Non-Preemptive': 'PNP',
     'Multilevel Queue': 'MLQ',
-    'Priority-Based Scheduling': 'PBS',
+    'Priority-Based Scheduling': 'PB',
     'Multilevel Feedback Queue': 'MLFQ',
   };
 
@@ -61,14 +60,14 @@ function Home() {
     }
   };
 
-  const displayButtons = (datum, index) => {
+  const displayButtons = (datum) => {
     return (
       <>
         <div className="col-md-6">
           <button
             type="button"
             onClick={() => handleNavigate(datum)}
-            className="w-100 m-1 btn btn-danger btn-block"
+            className="w-100 m-1 mt-3 btn btn-lg btn-danger btn-block"
           >
             {datum}
           </button>
@@ -78,12 +77,13 @@ function Home() {
   };
 
   return (
-    <div className="bg-primary">
+    <div>
       <h1>CPU Scheduling Simulator</h1>
-      <div>
-        <h2 className="text-start">Choose an Algorithm</h2>
+      <h4>By Gallego & Garcia</h4>
+      <div className='m-5'>
+        <h3 className="text-start">Choose an Algorithm:</h3>
 
-        <div className="container" style={{ maxWidth: '970px' }}>
+        <div className="container" style={{ maxWidth: '950px' }}>
           <div className="row">
             {algos.map((data, index) => {
               return displayButtons(data, index);
