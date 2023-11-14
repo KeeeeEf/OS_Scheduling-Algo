@@ -8,6 +8,9 @@ import { Scheduling } from './components/Scheduling'
 import { PriorityInputProcess } from './components/PriorityInputProcess'
 import { PriorityScheduling } from './components/PriorityScheduling'
 
+import { RRInputProcess } from './components/RRInputProcess'
+import { RRScheduling } from './components/RRScheduling'
+
 function App() {
 
   return (
@@ -16,8 +19,10 @@ function App() {
       <Route path='/' element={<Home/>}/>
       <Route path='/input' element={<InputProcess/>}/>
       <Route path='/scheduling' element={<Scheduling/>}/>
-      <Route path='/priority-input' element={<InputProcess/>}/>
-      <Route path='/priority-scheduling' element={<Scheduling/>}/>
+      <Route path='/priority-input' element={<PriorityInputProcess/>}/>
+      <Route path='/priority-scheduling' element={<PriorityScheduling/>}/>
+      <Route path='/rr-input' element={<RRInputProcess/>}/>
+      <Route path='/rr-scheduling' element={<RRScheduling/>}/>
     </Routes>
     </>
   )
