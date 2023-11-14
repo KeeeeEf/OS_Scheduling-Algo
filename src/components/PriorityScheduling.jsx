@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { calculateScheduling } from './algos/pbs';
 import { GanttChart } from './GanttChart';
 
-export const Scheduling = () => {
+export const PriorityScheduling = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { processes } = location.state;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const InputProcess = () => {
+export const PriorityInputProcess = () => {
   const navigate = useNavigate();
   const [processes, setProcesses] = useState([]);
   const [arrivalTime, setArrivalTime] = useState('');
