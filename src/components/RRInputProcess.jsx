@@ -109,10 +109,16 @@ export const RRInputProcess = () => {
       },
     });
   };
+
+  const handleBack = () => {
+    navigate('/');
+    window.location.reload();
+  };
   
   return (
     <div>
       <h1>Input Processes</h1>
+      <button onClick={handleBack} className="btn btn-primary">Back to Home</button>
       <table className="table mt-5">
         <thead>
           <tr>
