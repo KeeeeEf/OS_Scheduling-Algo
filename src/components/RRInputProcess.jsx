@@ -125,7 +125,7 @@ export const RRInputProcess = () => {
       <button onClick={handleBack} className="btn btn-primary">Back to Home</button>
       <div className="row justify-content-end">
         <div className="col form-group col-auto ml-auto">
-          <h5 className="bold">Quantum Time</h5>
+          <h5 className="bold">Time Quantum</h5>
           <input
             type="number"
             value={quantumTime}

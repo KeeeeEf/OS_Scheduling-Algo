@@ -76,7 +76,7 @@ export const RRScheduling = () => {
   return (
     <div>
       <h1>{selectedAlgorithm} Scheduling</h1>
-      <h5>Quantum Time: {quantumTime}</h5>
+      <h5>Time Quantum: {quantumTime}</h5>
       <table className="table">
         <thead>
           <tr>
