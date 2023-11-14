@@ -17,7 +17,7 @@ function calculateScheduling(processes,tq) {
         findQ(newList);
 
         if(queueList.length == 0 && newList.length > 0){
-            total += newList[0].arrivalTime;
+            total = newList[0].arrivalTime;
             timelineList.push({
                 time: total,
                 value: 'idle'
