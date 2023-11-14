@@ -103,7 +103,7 @@ export const RRInputProcess = () => {
     }
 
     storeProcessesData(processes);
-    navigate('/scheduling', {
+    navigate('/rr-scheduling', {
       state: {
         processes,
       },

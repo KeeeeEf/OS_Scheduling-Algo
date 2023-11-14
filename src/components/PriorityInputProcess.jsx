@@ -104,7 +104,7 @@ export const PriorityInputProcess = () => {
     }
 
     storeProcessesData(processes);
-    navigate('/scheduling', {
+    navigate('/priority-scheduling', {
       state: {
         processes,
       },

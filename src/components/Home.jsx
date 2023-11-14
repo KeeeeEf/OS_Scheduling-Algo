@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '/src/App.css';
 
 function Home() {
@@ -13,38 +13,51 @@ function Home() {
     'Priority-Based Scheduling',
     'Multilevel Feedback Queue',
   ];
+
+  const algoAcronyms = {
+    'First Come First Serve': 'FCFS',
+    'Round-Robin Scheduling': 'RR',
+    'Shortest Job First': 'SJF',
+    'Shortest Remaining Time First': 'SRTF',
+    'Priority Non-Preemptive': 'PNP',
+    'Multilevel Queue': 'MLQ',
+    'Priority-Based Scheduling': 'PBS',
+    'Multilevel Feedback Queue': 'MLFQ',
+  };
+
   const navigate = useNavigate();
 
   const handleNavigate = (algorithm) => {
-    sessionStorage.setItem('selectedAlgorithm', algorithm);
+    const algorithmAcronym = algoAcronyms[algorithm];
+    sessionStorage.setItem('selectedAlgorithm', algorithmAcronym);
 
     switch (algorithm) {
       case 'First Come First Serve':
-      navigate('/input');
-      break;
-    case 'Round-Robin Scheduling':
-      navigate('/rr-input');
-      break;
-    case 'Shortest Job First':
-      navigate('/input');
-      break;
-    case 'Shortest Remaining Time First':
-      navigate('/input');
-      break;
-    case 'Priority Non-Preemptive':
-      navigate('/priority-input');
-      break;
-    case 'Multilevel Queue':
-      navigate('/input'); // TO BE CHANGED
-      break;
-    case 'Priority-Based Scheduling':
-      navigate('/priority-input');
-      break;
-    case 'Multilevel Feedback Queue':
-      navigate('/input'); // TO BE CHANGED
-      break;
-    default:
-      navigate('/input');
+        navigate('/input');
+        break;
+      case 'Round-Robin Scheduling':
+        navigate('/rr-input');
+        break;
+      case 'Shortest Job First':
+        navigate('/input');
+        break;
+      case 'Shortest Remaining Time First':
+        navigate('/input');
+        break;
+      case 'Priority Non-Preemptive':
+        navigate('/priority-input');
+        break;
+      case 'Multilevel Queue':
+        navigate('/input'); // TO BE CHANGED
+        break;
+      case 'Priority-Based Scheduling':
+        navigate('/priority-input');
+        break;
+      case 'Multilevel Feedback Queue':
+        navigate('/input'); // TO BE CHANGED
+        break;
+      default:
+        navigate('/input');
     }
   };
 

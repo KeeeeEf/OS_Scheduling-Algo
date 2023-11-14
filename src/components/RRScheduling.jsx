@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { calculateScheduling } from './algos/pbs';
 import { GanttChart } from './GanttChart';
 
 export const RRScheduling = () => {
@@ -20,50 +19,60 @@ export const RRScheduling = () => {
   const [totalAWT, setTotalAWT] = useState(0);
   const [totalProcesses, setTotalProcesses] = useState(0);
 
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
+
   useEffect(() => {
-    const functionCall = calculateScheduling(processes);
-    const originalData = functionCall.schedulingData;
-    const sortedData = [...originalData].sort((a, b) => a.process.id.localeCompare(b.process.id));
-    const timeline = functionCall.timelineList;
+    const selectedAlgorithm = sessionStorage.getItem('selectedAlgorithm');
 
-    const totalTurnaroundTime = sortedData.reduce((acc, data) => acc + data.turnaroundTime, 0);
-    const avgTurnaroundTime = totalTurnaroundTime / sortedData.length;
+    import(/* @vite-ignore */ `./algos/${selectedAlgorithm.toLowerCase()}`).then((module) => {
+      const { calculateScheduling } = module;
 
-    const totalWaitingTime = sortedData.reduce((acc, data) => acc + data.waitingTime, 0);
-    const avgWaitingTime = totalWaitingTime / sortedData.length;
+      const functionCall = calculateScheduling(processes);
+      const originalData = functionCall.schedulingData;
+      const sortedData = [...originalData].sort((a, b) => a.process.id.localeCompare(b.process.id));
+      const timeline = functionCall.timelineList;
 
-    const ttlCpuBurst = sortedData.reduce((acc, data) => acc + data.process.cpuBurst, 0);
-    const finEndTime = sortedData.reduce((maxEndTime, data) => { return Math.max(maxEndTime, data.endTime); }, 0);
-    const cpuUtil = (ttlCpuBurst / finEndTime) * 100;
+      const totalTurnaroundTime = sortedData.reduce((acc, data) => acc + data.turnaroundTime, 0);
+      const avgTurnaroundTime = totalTurnaroundTime / sortedData.length;
 
-    setSchedulingData(sortedData);
-    setTimelineData(timeline);
+      const totalWaitingTime = sortedData.reduce((acc, data) => acc + data.waitingTime, 0);
+      const avgWaitingTime = totalWaitingTime / sortedData.length;
 
-    setTotalTAT(totalTurnaroundTime);
-    setTotalAWT(totalWaitingTime);
-    setTotalProcesses(sortedData.length);
+      const ttlCpuBurst = sortedData.reduce((acc, data) => acc + data.process.cpuBurst, 0);
+      const finEndTime = sortedData.reduce((maxEndTime, data) => { return Math.max(maxEndTime, data.endTime); }, 0);
+      const cpuUtil = (ttlCpuBurst / finEndTime) * 100;
 
-    setAverageTurnaroundTime(avgTurnaroundTime);
-    setAverageWaitingTime(avgWaitingTime);
-    setTotalCpuBurst(ttlCpuBurst);
-    setFinalEndTime(finEndTime);
-    setCpuUtilization(cpuUtil);
+      setSchedulingData(sortedData);
+      setTimelineData(timeline);
+
+      setTotalTAT(totalTurnaroundTime);
+      setTotalAWT(totalWaitingTime);
+      setTotalProcesses(sortedData.length);
+
+      setAverageTurnaroundTime(avgTurnaroundTime);
+      setAverageWaitingTime(avgWaitingTime);
+      setTotalCpuBurst(ttlCpuBurst);
+      setFinalEndTime(finEndTime);
+      setCpuUtilization(cpuUtil);
+
+      setSelectedAlgorithm(selectedAlgorithm);
+    });
   }, [processes]);
 
   const handleBack = () => {
-    navigate('/input');
+    navigate('/rr-input');
     window.location.reload();
   };
 
   const handleSimulateAgain = () => {
-    navigate('/input', { state: { key: Date.now() } });
+    navigate('/', { state: { key: Date.now() } });
     sessionStorage.clear();
     window.location.reload();
   };
 
   return (
     <div>
-      <h1>Scheduling</h1>
+      <h1>{selectedAlgorithm} Scheduling</h1>
       <table className="table">
         <thead>
           <tr>
