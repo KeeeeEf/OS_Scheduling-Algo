@@ -5,9 +5,10 @@ import { GanttChart } from './GanttChart';
 export const RRScheduling = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { processes } = location.state;
+  const { processes, qt } = location.state;
   const [schedulingData, setSchedulingData] = useState([]);
   const [timelineData, setTimelineData] = useState([]);
+  const [quantumTime, setQuantumTime] = useState([]);
 
   const [averageTurnaroundTime, setAverageTurnaroundTime] = useState(0);
   const [averageWaitingTime, setAverageWaitingTime] = useState(0);
@@ -26,8 +27,9 @@ export const RRScheduling = () => {
 
     import(/* @vite-ignore */ `./algos/${selectedAlgorithm.toLowerCase()}`).then((module) => {
       const { calculateScheduling } = module;
-
-      const functionCall = calculateScheduling(processes);
+      
+      const tq = parseInt(qt, 10);
+      const functionCall = calculateScheduling(processes, tq);
       const originalData = functionCall.schedulingData;
       const sortedData = [...originalData].sort((a, b) => a.process.id.localeCompare(b.process.id));
       const timeline = functionCall.timelineList;
@@ -56,8 +58,9 @@ export const RRScheduling = () => {
       setCpuUtilization(cpuUtil);
 
       setSelectedAlgorithm(selectedAlgorithm);
+      setQuantumTime(tq);
     });
-  }, [processes]);
+  }, [processes, qt]);
 
   const handleBack = () => {
     navigate('/rr-input');
@@ -73,13 +76,13 @@ export const RRScheduling = () => {
   return (
     <div>
       <h1>{selectedAlgorithm} Scheduling</h1>
+      <h5>Quantum Time: {quantumTime}</h5>
       <table className="table">
         <thead>
           <tr>
             <th>Process ID</th>
             <th>Arrival Time</th>
             <th>CPU Burst</th>
-            <th>Quantum Time</th>
             <th>End Time</th>
             <th>Turnaround Time</th>
             <th>Waiting Time</th>
@@ -91,7 +94,6 @@ export const RRScheduling = () => {
               <td>{data.process.id}</td>
               <td>{data.process.arrivalTime}</td>
               <td>{data.process.cpuBurst}</td>
-              <td>{data.process.quantumTime}</td>
               <td>{data.endTime}</td>
               <td>{data.turnaroundTime}</td>
               <td>{data.waitingTime}</td>

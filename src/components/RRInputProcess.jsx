@@ -11,11 +11,14 @@ export const RRInputProcess = () => {
 
   useEffect(() => {
     const storedProcesses = JSON.parse(sessionStorage.getItem('inputProcesses')) || [];
+    const storedQuantumTime = JSON.parse(sessionStorage.getItem('qt')) || [];
+    setQuantumTime(storedQuantumTime);
     setProcesses(storedProcesses);
   }, []);
 
-  const storeProcessesData = (data) => {
+  const storeProcessesData = (data, qt) => {
     sessionStorage.setItem('inputProcesses', JSON.stringify(data));
+    sessionStorage.setItem('qt', JSON.stringify(qt));
   };
 
   const getNextProcessId = () => {
@@ -34,11 +37,6 @@ export const RRInputProcess = () => {
       return false;
     }
 
-    if (quantumTime === '' || quantumTime < 1) {
-      alert('Please enter valid quantum time.');
-      return false;
-    }
-
     return true;
   };
 
@@ -52,7 +50,7 @@ export const RRInputProcess = () => {
     if (editId !== null) {
       const updatedProcesses = processes.map((process) =>
         process.id === editId
-          ? { ...process, arrivalTime: parseInt(arrivalTime), cpuBurst: parseInt(cpuBurst), quantumTime: parseInt(quantumTime) }
+          ? { ...process, arrivalTime: parseInt(arrivalTime), cpuBurst: parseInt(cpuBurst)}
           : process
       );
       setProcesses(updatedProcesses);
@@ -62,7 +60,6 @@ export const RRInputProcess = () => {
         id: getNextProcessId(),
         arrivalTime: parseInt(arrivalTime),
         cpuBurst: parseInt(cpuBurst),
-        quantumTime: parseInt(quantumTime),
       };
 
       setProcesses([...processes, newProcess]);
@@ -78,7 +75,6 @@ export const RRInputProcess = () => {
     if (processToEdit) {
       setArrivalTime(processToEdit.arrivalTime.toString());
       setCpuBurst(processToEdit.cpuBurst.toString());
-      setQuantumTime(processToEdit.quantumTime.toString());
       setEditId(id);
     }
   };
@@ -96,18 +92,26 @@ export const RRInputProcess = () => {
   };
 
   const handleSimulate = () => {
-  
     if (processes.length < 2) {
       alert('Please add at least two processes before simulating.');
       return;
     }
 
-    storeProcessesData(processes);
+    const parsedQuantumTime = parseInt(quantumTime, 10);
+
+    if (isNaN(parsedQuantumTime) || parsedQuantumTime < 1) {
+      alert('Please enter a valid quantum time.');
+      return;
+    }
+
+    storeProcessesData(processes, parsedQuantumTime);
+
     navigate('/rr-scheduling', {
       state: {
         processes,
+        qt: parsedQuantumTime,
       },
-    });
+      });
   };
 
   const handleBack = () => {
@@ -119,13 +123,24 @@ export const RRInputProcess = () => {
     <div>
       <h1>Input Processes</h1>
       <button onClick={handleBack} className="btn btn-primary">Back to Home</button>
-      <table className="table mt-5">
+      <div className="row justify-content-end">
+        <div className="col form-group col-auto ml-auto">
+          <h5 className="bold">Quantum Time</h5>
+          <input
+            type="number"
+            value={quantumTime}
+            onChange={(e) => setQuantumTime(e.target.value)}
+            className="form-control"
+            style={{ maxWidth: '150px' }}
+          />
+        </div>
+      </div>
+      <table className="table mt-3">
         <thead>
           <tr>
             <th>Process ID</th>
             <th>Arrival Time</th>
             <th>CPU Burst</th>
-            <th>Quantum Time</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -155,18 +170,6 @@ export const RRInputProcess = () => {
                   />
                 ) : (
                   process.cpuBurst
-                )}
-              </td>
-              <td>
-                {editId === process.id ? (
-                    <input
-                    type="number"
-                    value={quantumTime}
-                    onChange={(e) => setQuantumTime(e.target.value)}
-                    className="form-control"
-                    />
-                ) : (
-                    process.quantumTime
                 )}
               </td>
               <td>
@@ -216,18 +219,6 @@ export const RRInputProcess = () => {
               type="number"
               value={cpuBurst}
               onChange={(e) => setCpuBurst(e.target.value)}
-              className="form-control"
-            />
-          </div>
-        </div>
-
-        <div className="col">
-          <div className="form-group">
-            <h5 className="bold">Quantum Time</h5>
-            <input
-              type="number"
-              value={quantumTime}
-              onChange={(e) => setQuantumTime(e.target.value)}
               className="form-control"
             />
           </div>
