@@ -8,9 +8,9 @@ function Home() {
     'Shortest Job First',
     'Shortest Remaining Time First',
     'Priority Non-Preemptive',
-    'Multilevel Queue',
+    // 'Multilevel Queue',
     'Priority-Based Scheduling',
-    'Multilevel Feedback Queue',
+    // 'Multilevel Feedback Queue',
   ];
 
   const algoAcronyms = {
@@ -19,9 +19,9 @@ function Home() {
     'Shortest Job First': 'SJF',
     'Shortest Remaining Time First': 'SRTF',
     'Priority Non-Preemptive': 'PNP',
-    'Multilevel Queue': 'MLQ',
+    // 'Multilevel Queue': 'MLQ',
     'Priority-Based Scheduling': 'PB',
-    'Multilevel Feedback Queue': 'MLFQ',
+    // 'Multilevel Feedback Queue': 'MLFQ',
   };
 
   const navigate = useNavigate();
@@ -46,15 +46,15 @@ function Home() {
       case 'Priority Non-Preemptive':
         navigate('/priority-input');
         break;
-      case 'Multilevel Queue':
-        navigate('/input'); // TO BE CHANGED
-        break;
+      // case 'Multilevel Queue':
+      //   navigate('/input'); // TO BE CHANGED
+      //   break;
       case 'Priority-Based Scheduling':
         navigate('/priority-input');
         break;
-      case 'Multilevel Feedback Queue':
-        navigate('/input'); // TO BE CHANGED
-        break;
+      // case 'Multilevel Feedback Queue':
+      //   navigate('/input'); // TO BE CHANGED
+      //   break;
       default:
         navigate('/input');
     }
